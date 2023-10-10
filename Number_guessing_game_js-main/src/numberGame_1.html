@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+</head>
+<link rel="stylesheet"href="style.css">
+<body>
+
+    <!-- ESTEVEN GUETA | BSIT 4-3 -->
+
+    <div class="numbers">
+        <img class="img9" src="../Assets/9r.png" alt="">
+        <img class="img12" src="../Assets/12r.png" alt="">
+        <img class="img3" src="../Assets/3r.png" alt="">
+        <img class="img24" src="../Assets/24r.png" alt="">
+    </div>    
+
+    <div class="game-title">
+        <h1>NUMBER GUESSING GAME</h1>
+    </div>
+
+    <div class="game-holder">
+
+        <div id="stage">
+            <div id="scale"></div>
+            <div id="arrow"></div>
+        </div>
+
+        <p id="output">I am thinking of a number between 0 and 99</p>
+        <input id="input" type="text" placeholder="Enter your guess">
+        <button>Guess</button>
+
+    <script type="text/javascript">
+
+        //Game variables
+        var mysteryNumber = Math.floor(Math.random() * 100);
+        console.log(mysteryNumber);
+        var playersGuess = 0;
+        var guessesRemaining = 10;
+        var guessesMade = 0;
+        var gameState = "";
+        var gameWon = false;
+
+        //The input and output fields
+        var input = document.querySelector("#input");
+        var output = document.querySelector("#output");
+
+        //The button
+        var button = document.querySelector("button");
+        button.style.cursor = "pointer";
+        button.addEventListener("click", clickHandler, false);
+
+        //The arrow
+        var arrow = document.querySelector("#arrow");
+
+        function render ()
+        {
+            arrow.style.left = playersGuess * 3 + "px";
+        }
+
+        window.addEventListener("keydown", keydownHandler, false);
+        function keydownHandler(event)
+        {
+            if(event.keyCode === 13)
+            {
+                validateInput ();
+            }
+        }
+
+        function clickHandler() {
+            //playGame();
+            validateInput();
+        }
+        function validateInput()
+        {
+            playersGuess = parseInt(input.value);
+            if(isNaN(playersGuess))
+        {
+            output.innerHTML = "Please enter a number.";
+         }   
+         else {
+            playGame();
+         }
+            
+        }
+        function playGame(){
+
+            guessesRemaining = guessesRemaining -1;
+            guessesMade = guessesMade + 1;
+            gameState = " Guess: " + guessesMade + ", Remaining: " + guessesRemaining;
+
+            playersGuess = parseInt(input.value);
+            if(playersGuess > mysteryNumber){
+                output.innerHTML = "That's too high." + gameState;
+                //check for the end of the game
+                if (guessesRemaining < 1){
+                    endGame();
+                }
+            }
+            else if(playersGuess < mysteryNumber){
+                output.innerHTML = "That's too low." + gameState;
+                 //check for the end of the game
+                 if (guessesRemaining < 1){
+                    endGame();
+                 }
+            }
+            else if(playersGuess === mysteryNumber){
+              gameWon = true; 
+              endGame ();}
+
+              //UPDATE THE GRAPHIC DISPLAY
+              render ();
+            }
+        
+
+        function endGame ()
+        {
+            if (gameWon)
+            {
+                output.innerHTML = `
+            <div class="centered-text">
+                Yes, it's ${mysteryNumber}!<br>
+                It only took you ${guessesMade} guesses.
+            </div>`;
+           } else {
+               output.innerHTML = `
+            <div class="centered-text">
+                No more guesses left!<br>
+                The number was: ${mysteryNumber}.
+            </div>`;
+                
+            }
+
+            //Disable the button
+            button.removeEventListener("click", clickHandler, false);
+            button.disabled = true;
+
+            //Disable the enter key
+            window.removeEventListener("keydown", keydownHandler, false);
+
+            //Disable the input field
+            input.disabled = true;
+
+        }
+    
+    </script>
+    </div>
+      
+        
+        
+    </div>
+   
+</body>
+</html>
